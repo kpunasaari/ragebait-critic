@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.Python
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Reports and generated outputs
+reports/
+ragebait_report.json
+ragebait_before.json
+ragebait_after.json
+project_report.json
+bad_code_report.md
+project_report.md
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Uploaded scratch files
+current_*.txt

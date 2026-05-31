@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools>=77.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ragebait-critic"
+version = "0.1.0"
+description = "A ruthless, evidence-based AI audit engine for code, projects, documents, SEO, PR, design briefs, and product ideas."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+    { name = "Kai Punasaari" }
+]
+keywords = [
+    "ai",
+    "audit",
+    "code-review",
+    "llm",
+    "streamlit",
+    "cli",
+    "project-analysis",
+    "quality-gate"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Text Processing :: Linguistic"
+]
+dependencies = [
+    "litellm>=1.35.0",
+    "streamlit>=1.32.0",
+    "pypdf>=4.2.0",
+    "docx2txt>=0.8",
+    "beautifulsoup4>=4.12.3",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.1",
+    "pillow>=10.3.0",
+    "pydantic>=2.7.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.5.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/kpunasaari/ragebait-critic"
+Repository = "https://github.com/kpunasaari/ragebait-critic"
+Issues = "https://github.com/kpunasaari/ragebait-critic/issues"
+
+[tool.setuptools.packages.find]
+include = ["ragebait_critic*"]
+exclude = [
+    "tests*",
+    "docs*",
+    "examples*",
+    "integrations*",
+    "prompts*"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "B",
+    "UP",
+    "SIM"
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
