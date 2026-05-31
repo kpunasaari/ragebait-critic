@@ -1,0 +1,191 @@
+{
+  "name": "ragebait_critic_audit",
+  "version": "0.1.0",
+  "description": "Runs a ruthless, evidence-based AI audit against raw text, a local file, a URL, or a local project directory. Returns a structured JSON report containing verdict, findings, priority actions, blind spots, optional project audit metadata, and roast comments.",
+  "command": "python cli.py",
+  "recommended_output_format": "json",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "input_text": {
+        "type": ["string", "null"],
+        "description": "Raw text to audit. Exactly one of input_text, input_path, or input_url must be provided."
+      },
+      "input_path": {
+        "type": ["string", "null"],
+        "description": "Path to a local file or local project directory. Exactly one of input_text, input_path, or input_url must be provided."
+      },
+      "input_url": {
+        "type": ["string", "null"],
+        "description": "URL to fetch and audit. Exactly one of input_text, input_path, or input_url must be provided."
+      },
+      "domain": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "code",
+          "project",
+          "design",
+          "thesis",
+          "seo",
+          "pr",
+          "general"
+        ],
+        "default": "auto",
+        "description": "Audit domain. Use auto unless the correct domain is already known."
+      },
+      "language": {
+        "type": "string",
+        "default": "auto",
+        "description": "Output language. Use auto to match the dominant input language. Examples: English, Turkish, Finnish."
+      },
+      "intensity": {
+        "type": "string",
+        "enum": [
+          "normal",
+          "brutal",
+          "nuclear"
+        ],
+        "default": "brutal",
+        "description": "Critique intensity."
+      },
+      "roast_style": {
+        "type": "string",
+        "enum": [
+          "none",
+          "bully"
+        ],
+        "default": "none",
+        "description": "Optional roast style. Bully is opt-in and adds stand-up-style flaw-grounded roast comments."
+      },
+      "output_format": {
+        "type": "string",
+        "enum": [
+          "json",
+          "markdown"
+        ],
+        "default": "json",
+        "description": "Output format. Tool and agent integrations should use json."
+      },
+      "output_path": {
+        "type": ["string", "null"],
+        "default": null,
+        "description": "Optional path where the generated report should be written."
+      },
+      "model": {
+        "type": ["string", "null"],
+        "default": null,
+        "description": "Optional LiteLLM model override. Examples: openai/gpt-4o-mini, gemini/gemini-1.5-flash, ollama/llama3.1."
+      },
+      "detect_only": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, only process input and detect domain/language. Does not call the audit LLM."
+      },
+      "preview_input": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, only process and preview normalized input. Does not call the audit LLM."
+      },
+      "use_llm_domain_detection": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, uses LLM-assisted domain detection. By default, heuristic detection is used and does not call the LLM."
+      }
+    },
+    "oneOf": [
+      {
+        "required": ["input_text"]
+      },
+      {
+        "required": ["input_path"]
+      },
+      {
+        "required": ["input_url"]
+      }
+    ],
+    "additionalProperties": false
+  },
+  "canonical_json_output": {
+    "type": "object",
+    "description": "When output_format is json and a full audit is run, the tool returns the canonical Ragebait Critic AuditReport JSON object.",
+    "properties": {
+      "meta": {
+        "type": "object",
+        "description": "Runtime metadata such as domain, language, model, source, input type, intensity, and roast style."
+      },
+      "verdict": {
+        "type": "object",
+        "description": "Top-level score, rage title, and summary."
+      },
+      "findings": {
+        "type": "array",
+        "description": "Concrete flaws with severity, evidence, impact, recommendations, and optional bully comments."
+      },
+      "project_audit": {
+        "type": ["object", "null"],
+        "description": "Project-specific audit metadata. Present when domain is project."
+      },
+      "architecture_review": {
+        "type": ["object", "null"],
+        "description": "Optional architecture review section."
+      },
+      "priority_actions": {
+        "type": "array",
+        "description": "Ranked actions ordered by real-world priority."
+      },
+      "blind_spots": {
+        "type": "array",
+        "description": "Risks or weaknesses the submitted work appears to ignore."
+      },
+      "final_roast": {
+        "type": "string",
+        "description": "Final closing roast."
+      }
+    }
+  },
+  "cli_argument_mapping": {
+    "input_text": "--text",
+    "input_path": "--input",
+    "input_url": "--url",
+    "domain": "--domain",
+    "language": "--language",
+    "intensity": "--intensity",
+    "roast_style": "--roast-style",
+    "output_format": "--format",
+    "output_path": "--output",
+    "model": "--model",
+    "detect_only": "--detect-only",
+    "preview_input": "--preview-input",
+    "use_llm_domain_detection": "--use-llm-domain-detection"
+  },
+  "cli_examples": [
+    {
+      "description": "Audit a local project directory and write a JSON report.",
+      "command": "python cli.py --input ./my-project --domain project --intensity nuclear --roast-style bully --format json --output ragebait_report.json"
+    },
+    {
+      "description": "Audit a single code file.",
+      "command": "python cli.py --input ./src/api/auth.ts --domain code --intensity brutal --format json --output ragebait_code_report.json"
+    },
+    {
+      "description": "Audit raw PR or marketing text.",
+      "command": "python cli.py --text \"Your landing page copy here\" --domain pr --intensity brutal --format json --output ragebait_copy_report.json"
+    },
+    {
+      "description": "Detect domain and language without calling the audit LLM.",
+      "command": "python cli.py --input ./my-project --detect-only"
+    },
+    {
+      "description": "Preview selected project files without calling the audit LLM.",
+      "command": "python cli.py --input ./my-project --preview-input"
+    }
+  ],
+  "agent_usage_notes": [
+    "Use JSON output when another AI agent will consume the report.",
+    "Preview and detect-only modes do not call the audit LLM unless LLM domain detection is explicitly enabled.",
+    "Full audits require a configured LiteLLM provider and valid model credentials.",
+    "For local project audits, Ragebait Critic deliberately ignores .env files, node_modules, virtual environments, build folders, caches, and common binary assets.",
+    "The roast language is not the objective. The underlying findings, severity levels, evidence, and recommendations are the objective."
+  ]
+}
